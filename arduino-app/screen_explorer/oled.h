@@ -222,7 +222,7 @@ namespace oled
 
   int checkbounds()
   {
-    int buffer = 10; // how far past the edge of the screen the character must go before being transported. Compensates for the character sprite's width.
+    int buffer = 5; // how far past the edge of the screen the character must go before being transported. Compensates for the character sprite's width.
     if (xpos < 0-buffer)
     {
       return -1;

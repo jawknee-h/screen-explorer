@@ -15,7 +15,8 @@ void setup()   {
   matrix::setup();
   ledstrip::setup();
 
-  ledstrip::beginSequence();
+  //ledstrip::beginSequence();
+  ledstrip::pc_to_oled();
 }
 
 void loop()
@@ -50,7 +51,10 @@ void loop()
 
         if (matrix::checkbounds() == -1)
         {
-          current_screen = "lcd";
+          //current_screen = "lcd"; //CHANGE THIS BACK TO LCD AFTER WIRING THE LCD AGAIN
+          current_screen = "oled";
+          ledstrip::matrix_to_oled();
+          oled::left();
         }
       }
       //ledstrip::left();
@@ -61,11 +65,15 @@ void loop()
       if (current_screen == "oled")
       {
         oled::right();
+        Serial.println(oled::xpos);
         // If the character has walked off the oled through exit '1',
         // move to the lcd screen.
         if (oled::checkbounds() == 1)
         {
-          current_screen = "lcd";
+          //current_screen = "lcd"; //CHANGE THIS BACK TO LCD AFTER WIRING THE LCD
+          current_screen = "matrix";
+          ledstrip::oled_to_matrix();
+          matrix::right(); // to step on screen when finished travelling
         }
       }
       else if (current_screen == "lcd")
@@ -95,4 +103,6 @@ void loop()
   //delay(10);
   //oled::checkbounds();
   //delay(10);
+
+  
 }
