@@ -12,7 +12,7 @@ namespace ledstrip
   void setup() {
     FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
 
-    leds[0] = CRGB(255, 0, 0);
+    FastLED.clear();
     FastLED.show();
   }
 
@@ -67,7 +67,12 @@ namespace ledstrip
 
   void pc_to_oled()
   {
-    travel(0, 22);
+    travel(0, 21);
+  }
+
+  void oled_to_pc()
+  {
+    travel(21, 0);
   }
 
   // DELETE THIS ONCE I ADD THE MATRIX!

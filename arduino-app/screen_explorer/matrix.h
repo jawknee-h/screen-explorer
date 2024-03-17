@@ -4,7 +4,7 @@
 namespace matrix
 {
   // Matrix display
-  const int CS_PIN = 13;
+  const int CS_PIN = 7;
   const int DIN_PIN = 2;
   const int CLK_PIN = 4;
   LedControl lc = LedControl(DIN_PIN, CLK_PIN, CS_PIN, 0);

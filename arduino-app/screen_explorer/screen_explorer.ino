@@ -4,7 +4,7 @@
 #include "ledstrip.h"
 //#include "nokia.h"
 
-auto current_screen = String("oled");
+auto current_screen = String("pc");
 
 void setup()   {
 	Serial.begin(115200);
@@ -14,9 +14,6 @@ void setup()   {
   lcd::setup();
   matrix::setup();
   ledstrip::setup();
-
-  //ledstrip::beginSequence();
-  ledstrip::pc_to_oled();
 }
 
 void loop()
@@ -33,6 +30,13 @@ void loop()
       if (current_screen == "oled")
       {
         oled::left();
+
+        if (oled::checkbounds() == -1)
+        {
+          current_screen = "pc";
+          ledstrip::oled_to_pc();
+          Serial.write('r');
+        }
       }
       else if (current_screen == "lcd")
       {
@@ -65,7 +69,7 @@ void loop()
       if (current_screen == "oled")
       {
         oled::right();
-        Serial.println(oled::xpos);
+        //Serial.println(oled::xpos);
         // If the character has walked off the oled through exit '1',
         // move to the lcd screen.
         if (oled::checkbounds() == 1)
@@ -82,7 +86,7 @@ void loop()
 
         if (lcd::checkbounds() == 1)
         {
-          Serial.println("moving to matrix");
+          //erial.println("moving to matrix");
           current_screen = "matrix";
         }
       }
@@ -93,7 +97,12 @@ void loop()
     }
     else if (recv == 'b') // The character has exited the computer screen
     {
-      current_screen = "oled";
+      if (current_screen == "pc")
+      {
+        current_screen = "oled";
+        ledstrip::pc_to_oled();
+        oled::right();
+      }
     }
   }
 
