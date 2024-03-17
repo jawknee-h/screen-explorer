@@ -2,14 +2,12 @@
 #include "lcd.h"
 #include "matrix.h"
 #include "ledstrip.h"
-//#include "nokia.h"
 
 auto current_screen = String("pc");
 
 void setup()   {
 	Serial.begin(115200);
 
-	//nokia::setup();
   oled::setup();
   lcd::setup();
   matrix::setup();
@@ -24,57 +22,65 @@ void loop()
   {
     char recv = Serial.read();
 
+    // If recieved a LEFT command
     if (recv == 'a')
     {
       // Send the 'left' command to the current screen
+
+      /* oled */
       if (current_screen == "oled")
       {
         oled::left();
 
+        // If the character has walked off the LEFT side of the oled..
         if (oled::checkbounds() == -1)
         {
+          // switch to the pc screen.
           current_screen = "pc";
           ledstrip::oled_to_pc();
-          Serial.write('r');
+          Serial.write('r'); // this tells the openFrameworks app to re-activate the character.
         }
       }
+      /* lcd */
       else if (current_screen == "lcd")
       {
         lcd::left();
 
-        // If the character has walked off the lcd through exit '-1',
-        // move to the oled screen.
+        // If the character has walked off the LEFT side of the lcd..
         if (lcd::checkbounds() == -1)
         {
+          // move to the oled screen.
           current_screen = "oled";
         }
       }
+      /* matrix */
       else if (current_screen == "matrix")
       {
         matrix::left();
 
+        // If the character walked off the LEFT side of the matrix..
         if (matrix::checkbounds() == -1)
         {
-          //current_screen = "lcd"; //CHANGE THIS BACK TO LCD AFTER WIRING THE LCD AGAIN
+          // Move to the oled screen.
           current_screen = "oled";
           ledstrip::matrix_to_oled();
           oled::left();
         }
       }
-      //ledstrip::left();
     }
+
+    // If recieved a RIGHT command
     else if (recv == 'd')
     {
       // Send the 'right' command to the current screen
+      /* oled */
       if (current_screen == "oled")
       {
         oled::right();
-        //Serial.println(oled::xpos);
-        // If the character has walked off the oled through exit '1',
-        // move to the lcd screen.
+        // If the character has walked off the right side of the oled..
         if (oled::checkbounds() == 1)
         {
-          //current_screen = "lcd"; //CHANGE THIS BACK TO LCD AFTER WIRING THE LCD
+          // move to the lcd screen.
           current_screen = "matrix";
           ledstrip::oled_to_matrix();
           matrix::right(); // to step on screen when finished travelling
@@ -84,21 +90,25 @@ void loop()
       {
         lcd::right();
 
+        // If the character has walked off the right side of the lcd..
         if (lcd::checkbounds() == 1)
         {
-          //erial.println("moving to matrix");
+          // move to the matrix.
           current_screen = "matrix";
         }
       }
+      /* matrix */
       else if (current_screen == "matrix")
       {
         matrix::right();
       }
     }
-    else if (recv == 'b') // The character has exited the computer screen
+    /* Recieved the switch command (when the character has exited the computer screen) */
+    else if (recv == 'b')
     {
       if (current_screen == "pc")
       {
+        // Transition to the oled.
         current_screen = "oled";
         ledstrip::pc_to_oled();
         oled::right();
@@ -108,10 +118,4 @@ void loop()
 
   oled::draw();
   lcd::drawCharacter();
-
-  //delay(10);
-  //oled::checkbounds();
-  //delay(10);
-
-  
 }

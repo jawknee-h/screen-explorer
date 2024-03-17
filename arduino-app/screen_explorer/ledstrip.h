@@ -4,8 +4,7 @@ namespace ledstrip
 {
 
   const int LED_PIN = 3;
-  //char sequence[] = { 'l', 'r', 'l', 'l', 'r', 'r', 'l', 'r', 'l', 'l', 'l'};
-  const int NUM_LEDS = 59; // length of sequence
+  const int NUM_LEDS = 59;
 
   CRGB leds[NUM_LEDS];
 
@@ -14,26 +13,6 @@ namespace ledstrip
 
     FastLED.clear();
     FastLED.show();
-  }
-
-  void beginSequence()
-  {
-    int index = NUM_LEDS-1;
-
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-      leds[i] = CRGB(255, 0, 0);
-      FastLED.show();
-      delay(100);
-    }
-    for (int i = NUM_LEDS; i > 0; i--)
-    {
-      leds[i] = CRGB(0, 0, 0);
-      FastLED.show();
-      delay(100);
-    }
-
-    
   }
 
   void travel(int fromIndex, int toIndex)
@@ -65,23 +44,25 @@ namespace ledstrip
     FastLED.show();
   }
 
+  /* Transition from the pc screen to the oled */
   void pc_to_oled()
   {
     travel(0, 21);
   }
 
+  /* Transition from the oled to the pc screen */
   void oled_to_pc()
   {
     travel(21, 0);
   }
 
-  // DELETE THIS ONCE I ADD THE MATRIX!
+  /* Transition from the oled to the 8x8 matrix */
   void oled_to_matrix()
   {
     travel(23, 59);
   }
 
-  // DELETE THIS TOO
+  /* Transition from the 8x8 matrix to the oled */
   void matrix_to_oled()
   {
     travel(59, 23);

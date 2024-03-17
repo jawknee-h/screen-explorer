@@ -4,7 +4,6 @@ namespace oled
 {
 
   U8G2_SSD1306_64X48_ER_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);   // EastRising 0.66" OLED breakout board, Uno: A4=SDA, A5=SCL, 5V powered
-  //U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
   const int SCRN_WIDTH = 64;
   const int SCRN_HEIGHT = 48;
@@ -79,6 +78,7 @@ namespace oled
       u8g2.drawLine(Rx1, Ry1, Rx2, Ry2);
     }
 
+    /* I haven't made use of this function in this project, though it would be nice to. I just have very little time right now */
     void raise()
     {
       arms_raised = true;
@@ -130,9 +130,6 @@ namespace oled
     eyes.draw();
 
     // arms
-    // u8g2.drawLine(xpos-3, ypos-8, xpos-7, ypos-2); // left arm
-    // u8g2.drawLine(xpos+3, ypos-8, xpos+7, ypos-2); // right arm
-    // drawing arms
     arms.draw();
 
     // antenna
@@ -148,60 +145,7 @@ namespace oled
     u8g2.sendBuffer();
   }
 
-  // void draw()
-  // {
-  //   u8g2.clearBuffer();
-  
-  //     u8g2.setDrawColor(1);
-  //     u8g2.setFont(u8g2_font_unifont_t_symbols);
-  //      //u8g2.drawGlyph(xpos, ypos, 0x2603);	/* dec 9731/hex 2603 Snowman */
-  //     //u8g2.drawDisc(xpos,18,5);
-
-  //     // legs
-  //     u8g2.drawLine(xpos-1, ypos, xpos-1, ypos-3); // left leg
-  //     u8g2.drawLine(xpos+1, ypos, xpos+1, ypos-3); // right leg
-  //     // feet
-  //     u8g2.drawLine(xpos-1, ypos, xpos-2, ypos); // left foot
-  //     u8g2.drawLine(xpos+1, ypos, xpos+2, ypos); // right foot
-
-  //     // torso
-  //     u8g2.drawBox(xpos-3, ypos-9, 7, 6);
-
-  //     // head
-  //     u8g2.drawFilledEllipse(xpos, ypos-12, 5, 3, U8G2_DRAW_ALL);
-
-  //     // left eye
-  //     u8g2.drawFilledEllipse(xpos-4, ypos-12, 3, 2, U8G2_DRAW_ALL); // eye fill
-  //     u8g2.setDrawColor(0);
-  //     u8g2.drawFilledEllipse(xpos-4, ypos-12, 2, 1, U8G2_DRAW_ALL); // eye outline
-  //     u8g2.setDrawColor(1);
-  //     u8g2.drawBox(xpos-5, ypos-12, 2, 1); // pupil
-
-  //     // right eye
-  //     u8g2.drawFilledEllipse(xpos+4, ypos-12, 3, 3, U8G2_DRAW_ALL); // eye fill
-  //     u8g2.setDrawColor(0);
-  //     u8g2.drawFilledEllipse(xpos+4, ypos-12, 2, 2, U8G2_DRAW_ALL); // eye outline
-  //     u8g2.setDrawColor(1);
-  //     u8g2.drawBox(xpos+4, ypos-13, 2, 1); // pupil
-
-  //     // arms
-  //     u8g2.drawLine(xpos-3, ypos-8, xpos-7, ypos-2); // left arm
-  //     u8g2.drawLine(xpos+3, ypos-8, xpos+7, ypos-2); // right arm
-
-  //     // antenna
-  //     u8g2.drawLine(xpos-2, ypos-15, xpos-5, ypos-21); // left antenna
-  //     u8g2.drawBox(xpos-6, ypos-22, 2, 2); // left bauble
-  //     u8g2.drawLine(xpos+2, ypos-16, xpos+4, ypos-22); // right antenna
-  //     u8g2.drawBox(xpos+4, ypos-24, 2, 2); // right bauble
-
-  //     // mouth
-  //     u8g2.setDrawColor(0);
-  //     u8g2.drawPixel(xpos, ypos-9);
-
-  //   u8g2.sendBuffer();
-  // }
-
-  // movement
+  /* movement */
   void walk(int offset)
   {
     xpos += offset;

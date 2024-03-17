@@ -1,8 +1,5 @@
 #include <LiquidCrystal.h>
 
-/// HOW TO USE //
-// - call setup()
-
 namespace lcd
 {
     const int rs = 7;
@@ -25,6 +22,7 @@ namespace lcd
     int lampIndex = 5;
     int tableIndex = 6;
 
+    // 
     byte shadow[8] = {
       B00000,
       B00000,
@@ -219,13 +217,7 @@ namespace lcd
       // Set the display's contrast
       analogWrite(contrast_pin, 100);
 
-      //lcd.createChar(0, guy0);
-      //lcd.createChar(1, guy1);
-      //lcd.createChar(2, guy2);
-      //lcd.createChar(3, guy3);
-      //lcd.createChar(4, lilguy);
-      // lcd.createChar(2, entrance);
-      // lcd.createChar(4, table);
+      // Create the custom characters
       lcd.createChar(bodyIndex, lilguy1);
       lcd.createChar(antennaIndex, lilguyant);
       lcd.createChar(doorIndex, door);
@@ -239,10 +231,6 @@ namespace lcd
 
     void drawBackground()
     {
-      // door
-      //lcd.setCursor(2, 1);
-      //lcd.write(byte(ladderIndex));
-
       // lamp
       lcd.setCursor(12, 1);
       lcd.write(byte(lampIndex));
@@ -256,16 +244,18 @@ namespace lcd
       lcd.write(byte(tableIndex));
     }
 
+    /* Draw the main character */
     void drawCharacter()
     {
       drawBackground();
 
       if (xpos < 0) return; // Don't draw the character if they are off the screen to the left
 
-      // upper character
+      // draw the upper half of the character
       lcd.setCursor(xpos, 0);
       lcd.write(byte(antennaIndex));
-      // lower character
+
+      // draw the lower half of the character
       lcd.setCursor(xpos, 1);
       lcd.write(byte(bodyIndex));
     }
