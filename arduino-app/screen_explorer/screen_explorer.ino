@@ -38,6 +38,7 @@ void loop()
           // switch to the pc screen.
           current_screen = "pc";
           ledstrip::oled_to_pc();
+          serialFlush();
           Serial.write('r'); // this tells the openFrameworks app to re-activate the character.
         }
       }
@@ -64,6 +65,7 @@ void loop()
           // Move to the oled screen.
           current_screen = "oled";
           ledstrip::matrix_to_oled();
+          serialFlush();
           oled::left();
         }
       }
@@ -83,6 +85,7 @@ void loop()
           // move to the lcd screen.
           current_screen = "matrix";
           ledstrip::oled_to_matrix();
+          serialFlush();
           matrix::right(); // to step on screen when finished travelling
         }
       }
@@ -111,6 +114,7 @@ void loop()
         // Transition to the oled.
         current_screen = "oled";
         ledstrip::pc_to_oled();
+        serialFlush();
         oled::right();
       }
     }
@@ -118,4 +122,11 @@ void loop()
 
   oled::draw();
   lcd::drawCharacter();
+}
+
+void serialFlush()
+{
+  while(Serial.available() > 0) {
+    char data = Serial.read();
+  }
 }
