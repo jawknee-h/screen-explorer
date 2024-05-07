@@ -66,7 +66,14 @@ void loop()
           current_screen = "oled";
           ledstrip::matrix_to_oled();
           serialFlush();
-          oled::left();
+
+          // Take several steps left so visible on screen.
+          for (int i = 0; i < 6; i++)
+          {
+            oled::left();
+            oled::draw();
+            delay(100);
+          }
         }
       }
     }
@@ -115,13 +122,21 @@ void loop()
         current_screen = "oled";
         ledstrip::pc_to_oled();
         serialFlush();
-        oled::right();
+        // Take several steps right so visible on screen.
+        for (int i = 0; i < 6; i++)
+        {
+          oled::right();
+          oled::draw();
+          delay(100);
+        }
       }
     }
   }
 
   oled::draw();
   lcd::drawCharacter();
+
+  //serialFlush(); // Clearing buffer so that move commands don't stack up
 }
 
 void serialFlush()
