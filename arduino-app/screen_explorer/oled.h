@@ -9,7 +9,7 @@ namespace oled
   const int SCRN_HEIGHT = 48;
   int xpos = -10;
   int ypos = SCRN_HEIGHT-5;
-  int step_size = 3;
+  int step_size = 4;
 
   struct Eyes {
     int xoffset = 0;
@@ -149,6 +149,16 @@ namespace oled
   void walk(int offset)
   {
     xpos += offset;
+
+    // Toggle arms with every step
+    if (arms.arms_raised)
+    {
+      arms.lower();
+    }
+    else
+    {
+      arms.raise();
+    }
 
     // updating visuals
     arms.update(xpos, ypos);
