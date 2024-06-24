@@ -198,6 +198,7 @@ namespace oled
       if (abs(xpos - new_xpos) < step_size) // if the distance to the target is less than the step size..
       {
         xpos = new_xpos; // set the position to the target position. This avoids infinite jittering back and forth because it overshoots the target.
+        arms.update(xpos, ypos);
       }
       else
       {
