@@ -108,7 +108,7 @@ void loop()
       if (current_screen == "oled")
       {
         oled::right();
-        
+
         // If the character has walked off the right side of the oled..
         if (oled::checkbounds() == 1)
         {
@@ -148,6 +148,7 @@ void loop()
         // Take several steps right so visible on screen.
         for (int i = 0; i < 6; i++)
         {
+          oled::arms.lower();
           oled::right();
           oled::draw();
           delay(100);

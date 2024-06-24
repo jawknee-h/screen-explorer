@@ -46,6 +46,11 @@ namespace oled
     {
       yoffset -= 1;
     }
+
+    void lookReset()
+    {
+      yoffset = 0;
+    }
   } eyes;
 
   struct Arms {
@@ -68,8 +73,8 @@ namespace oled
       Rx1 = new_body_xpos+3;
       Ry1 = Ly1;
 
-      if (arms_raised) raise();
-      else lower();
+      // if (arms_raised) raise();
+      // else lower();
     }
 
     void draw()
@@ -108,17 +113,38 @@ namespace oled
     u8g2.begin();
   }
 
+  // Running animation
+  int rFootOffset = 0;
+  int lFootOffset = 0;
+  void stand()
+  {
+    rFootOffset = 0;
+    lFootOffset = 0;
+  }
+
+  void stepLeft()
+  {
+    rFootOffset = -2;
+    lFootOffset = 0;
+  }
+
+  void stepRight()
+  {
+    rFootOffset = 0;
+    lFootOffset = -2;
+  }
+
   void draw()
   {
     u8g2.clearBuffer();
     u8g2.setDrawColor(1);
 
     // legs
-    u8g2.drawLine(xpos-1, ypos, xpos-1, ypos-3); // left leg
-    u8g2.drawLine(xpos+1, ypos, xpos+1, ypos-3); // right leg
+    u8g2.drawLine(xpos-1, ypos+lFootOffset, xpos-1, ypos-3); // left leg
+    u8g2.drawLine(xpos+1, ypos+rFootOffset, xpos+1, ypos-3); // right leg
     // feet
-    u8g2.drawLine(xpos-1, ypos, xpos-2, ypos); // left foot
-    u8g2.drawLine(xpos+1, ypos, xpos+2, ypos); // right foot
+    u8g2.drawLine(xpos-1, ypos+lFootOffset, xpos-2, ypos+lFootOffset); // left foot
+    u8g2.drawLine(xpos+1, ypos+rFootOffset, xpos+2, ypos+rFootOffset); // right foot
 
     // torso
     u8g2.drawBox(xpos-3, ypos-9, 7, 6);
@@ -167,15 +193,15 @@ namespace oled
   {
     xpos += offset;
 
-    // Toggle arms with every step
-    if (arms.arms_raised)
-    {
-      arms.lower();
-    }
-    else
-    {
-      arms.raise();
-    }
+    // // Toggle arms with every step
+    // if (arms.arms_raised)
+    // {
+    //   arms.lower();
+    // }
+    // else
+    // {
+    //   arms.raise();
+    // }
 
     // updating visuals
     arms.update(xpos, ypos);
@@ -191,30 +217,75 @@ namespace oled
     walk(step_size);
   }
 
-  void walkTo(int new_xpos)
+  void walkTo(int target_x)
   {
-    while (xpos != new_xpos)
+    // While the distance to the target is greater than the bug's step size..
+    while (abs(target_x - xpos) > step_size)
     {
-      if (abs(xpos - new_xpos) < step_size) // if the distance to the target is less than the step size..
+      if (target_x > xpos) // If target is to the right..
       {
-        xpos = new_xpos; // set the position to the target position. This avoids infinite jittering back and forth because it overshoots the target.
-        arms.update(xpos, ypos);
+        right();
+      }
+      else if (target_x < xpos) // If the target is to the left..
+      {
+        left();
+      }
+
+      // Animate the bug as he runs..
+      // - Raise and lower arms
+      // - Bob head up and down
+      // - Lift alternating legs
+      if (arms.arms_raised)
+      {
+        arms.lower();
+        eyes.lookUp();
+        stepLeft();
       }
       else
       {
-        if (xpos < new_xpos)
-        {
-          right();
-        }
-        else if (xpos > new_xpos)
-        {
-          left();
-        }
+        arms.raise();
+        eyes.lookDown();
+        stepRight();
       }
-      draw();
+      eyes.lookReset();
+      //arms.update(xpos, ypos);
 
-      delay(250); // The delay here determines how rapidly it takes steps
+      draw(); // Update the visuals to represent the new position.
+      delay(200); // Pause briefly before taking another step.
     }
+    
+    // The loop above will get the bug close to the target, within the range of their step size.
+    // Now we just close the final gap by finding the distance to the target from here.
+    walk(target_x - xpos);
+    stand(); // set legs to be straight again
+    arms.update(xpos, ypos);
+    draw(); // update visuals
+    arms.lower(); // lower arms slightly delayed after reaching destination, for follow through.
+    delay(200);
+    draw();
+
+    // while (xpos != new_xpos)
+    // {
+    //   if (abs(xpos - new_xpos) < step_size) // if the distance to the target is less than the step size..
+    //   {
+    //     xpos = new_xpos; // set the position to the target position. This avoids infinite jittering back and forth because it overshoots the target.
+    //     arms.update(xpos, ypos);
+    //   }
+    //   else
+    //   {
+    //     if (xpos < new_xpos)
+    //     {
+    //       right();
+    //     }
+    //     else if (xpos > new_xpos)
+    //     {
+    //       left();
+    //     }
+    //   }
+    //   draw();
+
+    //   delay(250); // The delay here determines how rapidly it takes steps
+    // }
   }
 
   void walkToRandom()
@@ -227,7 +298,7 @@ namespace oled
 
   void goToLeftScreen()
   {
-    walkTo(-7);
+    walkTo(-8);
   }
 
   void goToRightScreen()
@@ -264,18 +335,17 @@ namespace oled
 
   void glance()
   {
-    tone(8, 164.81, 100);
-      eyes.lookLeft();
-      draw();
-      delay(1000);
-      eyes.lookRight();
-      draw();
-      eyes.lookRight();
-      draw();
-      delay(1300);
-      eyes.lookLeft();
-      draw();
-      delay(1000);
+    eyes.lookLeft();
+    draw();
+    delay(1000);
+    eyes.lookRight();
+    draw();
+    eyes.lookRight();
+    draw();
+    delay(1300);
+    eyes.lookLeft();
+    draw();
+    delay(1000);
   }
 
   int AI()
@@ -283,22 +353,25 @@ namespace oled
     // Infinite logic loop
     while (true)
     {
+      randomSeed(millis());
       int number = random(100);
 
       // 0-30: random move
-      if (number < 40)
+      if (number < 20)
       {
-        walkToRandom();
+        return goToRandScreen(); // return the direction of the new screen (-1: left, or 1: right)
       }
       // 30-80: glance
-      else if (number < 80)
+      else if (number < 30)
       {
+        arms.lower();
+        arms.update(xpos, ypos);
         glance();
       }
       // 60-100: random screen
       else if (number < 100)
       {
-        return goToRandScreen(); // return the direction of the new screen (-1: left, or 1: right)
+        walkToRandom();
       }
       
 
@@ -310,7 +383,7 @@ namespace oled
 
       // change screen
 
-      delay(200);
+      delay(random(200, 1000));
     }
   }
 
