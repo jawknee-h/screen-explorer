@@ -50,6 +50,7 @@ namespace oled
     void lookReset()
     {
       yoffset = 0;
+      xoffset = 0;
     }
   } eyes;
 
@@ -253,6 +254,7 @@ namespace oled
       draw(); // Update the visuals to represent the new position.
       delay(200); // Pause briefly before taking another step.
     }
+    arms.lower(); // DELETE THIS POSSIBLY. Can't tell if it looks better or worse. Or add delay?
     
     // The loop above will get the bug close to the target, within the range of their step size.
     // Now we just close the final gap by finding the distance to the target from here.
@@ -383,6 +385,7 @@ namespace oled
 
       // change screen
 
+      // Small random delay between actions
       delay(random(200, 1000));
     }
   }

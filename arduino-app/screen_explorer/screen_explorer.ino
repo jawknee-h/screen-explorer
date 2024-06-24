@@ -89,6 +89,8 @@ void loop()
           ledstrip::matrix_to_oled();
           serialFlush();
 
+          oled::eyes.lookReset(); // For some reason the pupils vanish, so this brings them back.
+
           // Take several steps left so visible on screen.
           for (int i = 0; i < 6; i++)
           {
