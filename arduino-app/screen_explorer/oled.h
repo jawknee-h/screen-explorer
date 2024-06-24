@@ -163,7 +163,7 @@ namespace oled
     // updating visuals
     arms.update(xpos, ypos);
   }
-  
+
   void left()
   {
     walk(-step_size);    
@@ -172,6 +172,40 @@ namespace oled
   void right()
   {
     walk(step_size);
+  }
+
+  void walkTo(int new_xpos)
+  {
+    while (xpos != new_xpos)
+    {
+      if (abs(xpos - new_xpos) < step_size) // if the distance to the target is less than the step size..
+      {
+        xpos = new_xpos; // set the position to the target position. This avoids infinite jittering back and forth because it overshoots the target.
+      }
+      else
+      {
+        if (xpos < new_xpos)
+        {
+          right();
+        }
+        else if (xpos > new_xpos)
+        {
+          left();
+        }
+      }
+      arms.update(xpos, ypos);
+      draw();
+
+      delay(250); // The delay here determines how rapidly it takes steps
+    }
+  }
+
+  void walkToRandom()
+  {
+    const int PADDING = 14;
+    int newGeneratedPos = random(PADDING, SCRN_WIDTH-PADDING);
+
+    walkTo(newGeneratedPos);
   }
 
   int checkbounds()
@@ -189,5 +223,20 @@ namespace oled
     {
       return 0;
     }
+  }
+
+  void randomAction()
+  {
+    // move
+    
+
+    // look left and right
+
+    // *bounce antenna???
+
+    // *jump???
+
+    // change screen
+
   }
 }
