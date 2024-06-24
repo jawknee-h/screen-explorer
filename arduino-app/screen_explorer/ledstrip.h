@@ -53,18 +53,18 @@ namespace ledstrip
   /* Transition from the oled to the pc screen */
   void oled_to_pc()
   {
-    travel(21, 0);
+    travel(20, 0);
   }
 
   /* Transition from the oled to the 8x8 matrix */
   void oled_to_matrix()
   {
-    travel(23, 59);
+    travel(21, 59);
   }
 
   /* Transition from the 8x8 matrix to the oled */
   void matrix_to_oled()
   {
-    travel(59, 23);
+    travel(59, 20);
   }
 }
