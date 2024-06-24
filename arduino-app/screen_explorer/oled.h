@@ -237,6 +237,19 @@ namespace oled
 
   int goToRandScreen()
   {
+    // Wave arms around first
+    for (int i = 0; i < 4; i++)
+    {
+      arms.raise();
+      eyes.lookDown();
+      draw();
+      delay(200);
+      arms.lower();
+      eyes.lookUp();
+      draw(); // Update the visuals
+      delay(150); // Pause briefly before taking another step.
+    }
+
     if (random(10) > 5)
     {
       goToRightScreen();
