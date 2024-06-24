@@ -17,6 +17,28 @@ void setup()   {
 void loop()
 {
   
+  if (current_screen == "oled")
+  {
+    oled::AI();
+
+    if (oled::checkbounds() == -1)
+    {
+      // switch to the pc screen.
+      current_screen = "pc";
+      ledstrip::oled_to_pc();
+      serialFlush();
+      Serial.write('r'); // this tells the openFrameworks app to re-activate the character.
+    }
+    else if (oled::checkbounds() == 1)
+    {
+      // move to the lcd screen.
+      current_screen = "matrix";
+      ledstrip::oled_to_matrix();
+      serialFlush();
+      matrix::right(); // to step on screen when finished travelling
+    }
+  }
+
   // Recieve player input through serial
   if (Serial.available() > 0)
   {
@@ -86,6 +108,7 @@ void loop()
       if (current_screen == "oled")
       {
         oled::right();
+        
         // If the character has walked off the right side of the oled..
         if (oled::checkbounds() == 1)
         {

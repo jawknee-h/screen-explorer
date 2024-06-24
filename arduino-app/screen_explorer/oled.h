@@ -145,6 +145,23 @@ namespace oled
     u8g2.sendBuffer();
   }
 
+  int checkbounds()
+  {
+    int buffer = 6; // how far past the edge of the screen the character must go before being transported. Compensates for the character sprite's width.
+    if (xpos < 0-buffer)
+    {
+      return -1;
+    }
+    else if (xpos > SCRN_WIDTH+buffer)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  }
+
   /* movement */
   void walk(int offset)
   {
@@ -193,7 +210,6 @@ namespace oled
           left();
         }
       }
-      arms.update(xpos, ypos);
       draw();
 
       delay(250); // The delay here determines how rapidly it takes steps
@@ -208,35 +224,64 @@ namespace oled
     walkTo(newGeneratedPos);
   }
 
-  int checkbounds()
+  void goToLeftScreen()
   {
-    int buffer = 5; // how far past the edge of the screen the character must go before being transported. Compensates for the character sprite's width.
-    if (xpos < 0-buffer)
+    walkTo(-7);
+  }
+
+  void goToRightScreen()
+  {
+    walkTo(SCRN_WIDTH+7);
+  }
+
+  int goToRandScreen()
+  {
+    if (random(10) > 5)
     {
-      return -1;
-    }
-    else if (xpos > SCRN_WIDTH+buffer)
-    {
-      return 1;
+      goToRightScreen();
+      return 1; // 1 for right
     }
     else
     {
-      return 0;
+      goToLeftScreen();
+      return -1; // -1 for left
+    }
+  }
+
+  int AI()
+  {
+    // Infinite logic loop
+    while (true)
+    {
+      int number = random(100);
+
+      // 0-60: random move
+      if (number < 60)
+      {
+        walkToRandom();
+      }
+      // 60-100: random screen
+      else if (number < 100)
+      {
+        return goToRandScreen(); // return the direction of the new screen (-1: left, or 1: right)
+      }
+      
+
+      // look left and right
+
+      // *bounce antenna???
+
+      // *jump???
+
+      // change screen
+
+      delay(200);
     }
   }
 
   void randomAction()
   {
-    // move
     
-
-    // look left and right
-
-    // *bounce antenna???
-
-    // *jump???
-
-    // change screen
 
   }
 }
