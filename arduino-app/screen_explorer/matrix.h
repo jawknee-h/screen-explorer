@@ -55,7 +55,32 @@ namespace matrix
         left();
       }
 
-      delay(200); // delay between steps
+      delay(400); // delay between steps
+    }
+  }
+
+  int AI()
+  {
+    // Infinite logic loop
+    while (true)
+    {
+      randomSeed(millis());
+      int number = random(100);
+
+      // 0-30: random move
+      if (number < 20)
+      {
+        walkTo(-1);
+        return -1; // -1: right
+      }
+      // 60-100: random screen
+      else if (number < 100)
+      {
+        walkTo(random(0, 7));
+      }
+
+      // Small random delay between actions
+      delay(random(200, 2000));
     }
   }
 

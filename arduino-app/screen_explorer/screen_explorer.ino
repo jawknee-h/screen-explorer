@@ -38,6 +38,28 @@ void loop()
       matrix::right(); // to step on screen when finished travelling
     }
   }
+  else if (current_screen == "matrix")
+  {
+    matrix::AI();
+
+    if (matrix::checkbounds() == -1)
+    {
+      // Move to the oled screen.
+      current_screen = "oled";
+      ledstrip::matrix_to_oled();
+      serialFlush();
+
+      oled::eyes.lookReset(); // For some reason the pupils vanish, so this brings them back.
+
+      // Take several steps left so visible on screen.
+      for (int i = 0; i < 6; i++)
+      {
+        oled::left();
+        oled::draw();
+        delay(100);
+      }
+    }
+  }
 
   // Recieve player input through serial
   if (Serial.available() > 0)
