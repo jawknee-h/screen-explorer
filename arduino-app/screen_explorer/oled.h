@@ -248,6 +248,22 @@ namespace oled
     }
   }
 
+  void glance()
+  {
+    tone(8, 164.81, 100);
+      eyes.lookLeft();
+      draw();
+      delay(1000);
+      eyes.lookRight();
+      draw();
+      eyes.lookRight();
+      draw();
+      delay(1300);
+      eyes.lookLeft();
+      draw();
+      delay(1000);
+  }
+
   int AI()
   {
     // Infinite logic loop
@@ -255,10 +271,15 @@ namespace oled
     {
       int number = random(100);
 
-      // 0-60: random move
-      if (number < 60)
+      // 0-30: random move
+      if (number < 40)
       {
         walkToRandom();
+      }
+      // 30-80: glance
+      else if (number < 80)
+      {
+        glance();
       }
       // 60-100: random screen
       else if (number < 100)
