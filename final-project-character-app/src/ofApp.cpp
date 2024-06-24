@@ -85,7 +85,7 @@ void ofApp::draw(){
 			int alpha = numLines - i;
 			int xpos = ofGetWidth()-i*2;
 			ofSetColor(ofColor::fromHsb(56, sat, bright, alpha));
-			ofLine(xpos, ofGetHeight()-250 - i*0.3, xpos, ofGetHeight() - 95);
+			ofLine(xpos, ofGetHeight()-155 - i*0.3, xpos, ofGetHeight() - 10);
 		}
 	ofPopStyle();
 }

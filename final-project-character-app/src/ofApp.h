@@ -23,7 +23,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
 		float dt;
-		Character character{ ofGetHeight() - 85.0f};
+		Character character{ ofGetHeight()  }; // floor y for fullscreen mode = 'ofGetHeight() - 85.0f'
 		bool movingRight = false;
 		bool movingLeft = false;
 		int moveDir = 0;
