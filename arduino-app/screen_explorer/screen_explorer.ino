@@ -3,7 +3,7 @@
 #include "matrix.h"
 #include "ledstrip.h"
 
-auto current_screen = String("pc");
+auto current_screen = String("matrix");
 
 void setup()   {
 	Serial.begin(115200);
@@ -135,7 +135,8 @@ void loop()
       /* matrix */
       else if (current_screen == "matrix")
       {
-        matrix::right();
+        //matrix::right();
+        matrix::walkTo(7);
       }
     }
     /* Recieved the switch command (when the character has exited the computer screen) */

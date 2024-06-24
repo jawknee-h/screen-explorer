@@ -42,6 +42,23 @@ namespace matrix
     update(); // update the display to reflect the character's new position.
   }
 
+  void walkTo(int target_x)
+  {
+    while (xpos != target_x)
+    {
+      if (target_x > xpos) // If target is to the right..
+      {
+        right();
+      }
+      else if (target_x < xpos) // If the target is to the left..
+      {
+        left();
+      }
+
+      delay(200); // delay between steps
+    }
+  }
+
   int checkbounds()
   {
     if (xpos < 0)
