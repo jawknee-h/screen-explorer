@@ -8,10 +8,26 @@ void ofApp::setup(){
 
 	// Establish a connection with the arduino through serial port COM7
 	serial.setup("COM7", 115200);
+
+	backgroundImg.load("bluescreen.png");
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+	// Confine cursor
+	if (CONFINE_CURSOR)
+	{
+		POINT point;
+		if (GetCursorPos(&point)) {
+			cout << point.x << "," << point.y << "\n";
+			// If cursor is out of desired bounds
+			if (point.x > 1226 || point.y < 66 || point.y > 990)
+			{
+				SetCursorPos(500, 500);
+			}
+		}
+	}
 
 	// Getting delta-time for physics calculations
 	dt = ofGetLastFrameTime();
@@ -124,7 +140,9 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofClear(ofColor(0, 0, 0, 0)); // clearing for transparent window
+	ofClear(ofColor(10, 10, 10, 0)); // clearing for transparent window
+
+	//backgroundImg.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 	character.draw(dt);
 
@@ -185,6 +203,9 @@ void ofApp::keyPressed(int key){
 		case 'b':
 			//armsRaised = !armsRaised;
 			armRaisesToDo = 3;
+			break;
+		case 'o':
+			CONFINE_CURSOR = !CONFINE_CURSOR;
 			break;
 		default:
 			break;

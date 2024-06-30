@@ -43,4 +43,9 @@ class ofApp : public ofBaseApp{
 		bool armsRaised = false;
 		int armRaisesToDo = 0;
 		float raisedTime = 0.0;
+
+		// Background image
+		ofImage backgroundImg;
+
+		bool CONFINE_CURSOR = true;
 };
