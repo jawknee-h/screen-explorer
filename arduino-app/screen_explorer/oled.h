@@ -323,7 +323,7 @@ namespace oled
       delay(150); // Pause briefly before taking another step.
     }
 
-    if (random(10) > 5)
+    if (random(10) > 10)
     {
       goToRightScreen();
       return 1; // 1 for right

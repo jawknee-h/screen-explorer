@@ -37,4 +37,10 @@ class ofApp : public ofBaseApp{
 		// Button states
 		bool leftIsDown = false;
 		bool rightIsDown = false;
+
+		// Character logic
+		float doNothingTime = 0;
+		bool armsRaised = false;
+		int armRaisesToDo = 0;
+		float raisedTime = 0.0;
 };

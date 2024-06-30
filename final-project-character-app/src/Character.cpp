@@ -341,7 +341,7 @@ void Character::walkTo(int target_xpos)
 {
 	// Set the target position and toggle walking to
 	walkToTargetXPos = target_xpos;
-	walkToUrgency = ofRandom(0.1, 1);
+	walkToUrgency = ofRandom(0.7, 1);
 	walkingTo = true;
 }
 
@@ -500,11 +500,38 @@ void Character::update_legs(Legs& lgs, const float& dt)
 legs.update_visuals(new_hip_pos);
 }
 
-void Character::ReachTowards(const ofVec2f& target, float reach_strength)
+void Character::reachTowards(const ofVec2f& target, float reach_strength)
 {
 
 	ofVec2f arm1reachforce = target - arm1spring.getAnchorPos();
 	ofVec2f arm2reachforce = target - arm2spring.getAnchorPos();
+	float a1mag = arm1reachforce.length();
+	float a2mag = arm2reachforce.length();
+
+	// always reach with both arms
+
+	arm1reachforce = normalize_vec(arm1reachforce) * reach_strength;
+	arm1spring.applyExternalForceOverride(arm1reachforce);
+
+	arm2reachforce = normalize_vec(arm2reachforce) * reach_strength;
+	arm2spring.applyExternalForceOverride(arm2reachforce);
+}
+
+void Character::reachTowardsLocal(ofVec2f& local_offset, float reach_strength)
+{
+	auto reachTarget = phys_position + local_offset;
+	reachTowards(reachTarget, reach_strength);
+}
+
+void Character::raiseArms()
+{
+	int reach_strength = 5.5;
+
+	ofVec2f arm1Target{ arms.arm1_origin.x - 0, arms.arm1_origin.y - 1};
+	ofVec2f arm2Target{ arms.arm2_origin.x + 0, arms.arm2_origin.y - 1};
+
+	ofVec2f arm1reachforce = arm1Target - arm1spring.getAnchorPos();
+	ofVec2f arm2reachforce = arm2Target - arm2spring.getAnchorPos();
 	float a1mag = arm1reachforce.length();
 	float a2mag = arm2reachforce.length();
 
@@ -556,12 +583,12 @@ void Character::chase(ofVec2f& target)
 	// grabbing
 	if (abs(distance_to_target.x) < 100 && distance_to_target.y < -100 && distance_to_target.y > -300)
 	{
-		ReachTowards(target, 4.0);
+		reachTowards(target, 4.0);
 	}
 	// reach/wave around arms
 	if (distance_to_target.y < -800)
 	{
-		ReachTowards(target, 4.0);
+		reachTowards(target, 4.0);
 	}
 }
 

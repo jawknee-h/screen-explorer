@@ -90,3 +90,8 @@ void Spring::applyExternalForce(ofVec2f ef)
 {
 	external_force = ef;
 }
+
+void Spring::applyExternalForceOverride(ofVec2f ef)
+{
+	external_force = ef - passive_force;
+}

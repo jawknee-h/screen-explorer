@@ -50,7 +50,9 @@ class Character
 		int frames_until_blink = 0;
 		int frames_until_new_look_target = 0;
 
-		void ReachTowards(const ofVec2f& target, float reach_strength);
+		void reachTowards(const ofVec2f& target, float reach_strength);
+		void reachTowardsLocal(ofVec2f& local_offset, float reach_strength);
+		void raiseArms();
 
 		void decrease_walk_speed();
 		void increase_walk_speed();

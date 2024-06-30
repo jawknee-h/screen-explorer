@@ -17,6 +17,7 @@ class Spring
 		void setPassiveForce(ofVec2f pf);
 		void addImpulse(ofVec2f imp_f);
 		void applyExternalForce(ofVec2f ef);
+		void Spring::applyExternalForceOverride(ofVec2f ef);
 	private:		
 		ofVec2f anchor_pos;
 		ofVec2f end_pos;

@@ -26,6 +26,56 @@ void ofApp::update(){
 			character.jump();
 		}*/
 
+		doNothingTime -= ofGetLastFrameTime();
+
+
+		// Wave arms around!
+		float rtime = 0.3; // The total amount of time to be waving the arms once (incl up and down)
+		if (armRaisesToDo > 0)
+		{
+			if (raisedTime < 0.0)
+			{
+				armsRaised = true;
+				raisedTime = rtime;
+			}
+			else if (raisedTime < rtime*0.5 && armsRaised)
+			{
+				armsRaised = false;
+				armRaisesToDo -= 1;
+			}
+
+			raisedTime -= ofGetLastFrameTime();
+		}
+
+		if (armsRaised) character.raiseArms();
+
+
+
+		if (!character.walkingTo)
+		{
+			// Only choose a new action if the character shouldn't currently be 'doing nothing'.
+			if (doNothingTime < 0)
+			{
+				int n = ofRandom(100);
+				// walk off screen
+				if (n < 10)
+				{
+					character.walkTo(ofGetWidth() + 90);
+				}
+				// do nothing
+				else if (n < 50)
+				{
+					doNothingTime = 1;
+					if (ofRandom(10) > 5) armRaisesToDo = 3;
+				}
+				// walk to new spot
+				else
+				{
+					character.walkTo(ofRandom(0, ofGetWidth() - 70));
+				}
+			}
+		}
+
 		moveDir = movingRight - movingLeft;
 		switch (moveDir)
 		{
@@ -37,14 +87,14 @@ void ofApp::update(){
 		}
 		//character.chase(of_get_mouse_pos());
 		character.updatePhysics(dt);
-	}
 
-	// If the character has walked off the right side of the screen..
-	if ((character.getPosition().x > ofGetWidth() + 70) && active)
-	{
-		std::cout << "swapping" << std::endl;
-		serial.writeByte('b'); // send a msg to move to the oled display.
-		active = false; // De-activate the graphics on this screen so the character no longer walks around
+		// If the character has walked off the right side of the screen..
+		if (character.getPosition().x > ofGetWidth() + 70)
+		{
+			std::cout << "swapping" << std::endl;
+			serial.writeByte('b'); // send a msg to move to the oled display.
+			active = false; // De-activate the graphics on this screen so the character no longer walks around
+		}
 	}
 
 	// Recieve serial commands from arduino
@@ -63,8 +113,11 @@ void ofApp::update(){
 		// Re-activate the character when 'r' is recieved
 		if (inByte == 'r')
 		{
+			std::cout << " back!" << std::endl;
+			character.setPosition(ofVec2f(ofGetWidth() + 50, ofGetHeight()));
+			character.walkTo(100);
 			active = true;
-			character.walkLeft();
+			//character.walkLeft();
 		}
 	}
 }
@@ -121,10 +174,18 @@ void ofApp::keyPressed(int key){
 			break;
 		case 'l':
 			// Generate random target position to walk to
-			character.walkTo(ofRandom(0, ofGetWidth()));
+			if (!character.walkingTo)
+			{
+				character.walkTo(ofRandom(0, ofGetWidth()));
+			}
 			break;
 		case 'r':
 			character.lookAt(ofVec2f{ ofRandomWidth(), ofRandomHeight() });
+			break;
+		case 'b':
+			//armsRaised = !armsRaised;
+			armRaisesToDo = 3;
+			break;
 		default:
 			break;
 	}
