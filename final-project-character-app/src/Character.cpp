@@ -202,6 +202,22 @@ void Character::draw_animated(const float& dt)
 	// eyes
 	update_eyes(dt);
 
+	// Blinking intermittently
+	if (frames_until_blink < 0)
+	{
+		frames_until_blink = rand() % 250 + 100;
+		blink();
+	}
+	frames_until_blink -= 1;
+
+	// Looking at new target intermittently
+	if (frames_until_new_look_target < 0)
+	{
+		frames_until_new_look_target = rand() % 250 + 100;
+		lookAt(ofVec2f(ofRandomWidth(), ofRandomHeight()));
+	}
+	frames_until_new_look_target -= 1;
+
 	// updating and drawing the eyelid sprite
 	if (blinking)
 	{
@@ -365,7 +381,7 @@ void Character::lookAt(const ofVec2f target)
 	if (distance_to_new_target > 40)
 	{
 		// blinking some of the time
-		if (rand() % 10 > 7)
+		if (rand() % 10 > 5)
 		{
 			blink();
 		}

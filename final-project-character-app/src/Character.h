@@ -47,6 +47,8 @@ class Character
 		Spring eye_spring_R{ 0, 0.3f, 0.5f, {0, 0} };
 		int eyelid_alpha = 0;
 		Sprite eyelidsprite{ "eyelids.png" };
+		int frames_until_blink = 0;
+		int frames_until_new_look_target = 0;
 
 		void ReachTowards(const ofVec2f& target, float reach_strength);
 
