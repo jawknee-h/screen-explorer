@@ -3,7 +3,7 @@
 #include "matrix.h"
 #include "ledstrip.h"
 
-auto current_screen = String("matrix");
+auto current_screen = String("pc");
 
 void setup()   {
 	Serial.begin(115200);

@@ -20,6 +20,12 @@ void ofApp::update(){
 	// Only update the character movement if this screen is currently active.
 	if (active)
 	{
+
+		/*if (ofRandom(100) > 99.5)
+		{
+			character.jump();
+		}*/
+
 		moveDir = movingRight - movingLeft;
 		switch (moveDir)
 		{
@@ -107,11 +113,15 @@ void ofApp::keyPressed(int key){
 			rightIsDown = true;
 			break;
 		case 'w':
-			//character.jump();
-			character.jumpTowards(of_get_mouse_pos());
+			character.jump();
+			//character.jumpTowards(of_get_mouse_pos());
 			break;
 		case 'd':
 			character.switch_draw_mode();
+			break;
+		case 'l':
+			// Generate random target position to walk to
+			character.walkTo(ofRandom(0, ofGetWidth()));
 			break;
 		default:
 			break;

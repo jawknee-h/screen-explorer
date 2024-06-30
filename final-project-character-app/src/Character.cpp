@@ -35,6 +35,40 @@ Character::~Character()
 
 void Character::updatePhysics(const float& dt)
 {
+	// Automatic walking to target
+	if (walkingTo)
+	{
+		if (abs(walkToTargetXPos - getPosition().x) < 10)
+		{
+			walkingTo = false;
+		}
+		// If the target is to the right of the character
+		else if (walkToTargetXPos > getPosition().x)
+		{
+			walkRight();
+			
+			// If we have passed the target now, no longer should be walkingTo
+			if (walkToTargetXPos <= getPosition().x)
+			{
+				walkingTo = false;
+			}
+		}
+		// Otherwise, if the target is to the left of the character
+		else if (walkToTargetXPos < getPosition().x)
+		{
+			walkLeft();
+
+			// If we have passed the target now, no longer should be walkingTo
+			if (walkToTargetXPos >= getPosition().x)
+			{
+				walkingTo = false;
+			}
+		}
+	}
+
+
+	/////////////////////////////////////////////////
+
 	velocity.x = normalized_walk_speed * walk_speed;
 	phys_position += velocity * dt; // apply velocity to position (averaging velocity this and last frame for reasons https://gamedev.stackexchange.com/a/126069)
 	velocity.y += GRAVITY * dt; // apply gravity to velocity
@@ -255,14 +289,22 @@ void Character::walk(float norm_speed)
 
 void Character::walkLeft()
 {
-	walk(-1);
-	legs.sin_angle = fmod(legs.sin_angle + legs.foot_speed, 2*MYPI); // incrementing sin_angle but keeping it in 0-360 range
+	walk(-1 * walkToUrgency);
+	legs.sin_angle = fmod(legs.sin_angle + (legs.foot_speed * walkToUrgency), 2*MYPI); // incrementing sin_angle but keeping it in 0-360 range
 }
 
 void Character::walkRight()
 {
-	walk(1);
-	legs.sin_angle = fmod(legs.sin_angle - legs.foot_speed, 2*MYPI); // decrementing sin_angle but keeping it in 0-360 range
+	walk(1 * walkToUrgency);
+	legs.sin_angle = fmod(legs.sin_angle - (legs.foot_speed * walkToUrgency), 2*MYPI); // decrementing sin_angle but keeping it in 0-360 range
+}
+
+void Character::walkTo(int target_xpos)
+{
+	// Set the target position and toggle walking to
+	walkToTargetXPos = target_xpos;
+	walkToUrgency = ofRandom(0.1, 1);
+	walkingTo = true;
 }
 
 void Character::jumpTowards(const ofVec2f& target)

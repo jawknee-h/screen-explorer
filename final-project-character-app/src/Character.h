@@ -31,6 +31,10 @@ class Character
 		// movement
 		void walkLeft();
 		void walkRight();
+		void walkTo(int _target_xpos);
+		bool walkingTo = false;
+		float walkToUrgency = 1;
+		int walkToTargetXPos;
 		void jump();
 		void jumpTowards(const ofVec2f& target);
 
