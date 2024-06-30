@@ -73,7 +73,7 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofClear(ofColor(0, 0, 0, 0)); // clearing for transparent window
 
-	character.draw();
+	character.draw(dt);
 
 	ofDrawBitmapString(ofGetFrameRate(), 500, 500);
 
@@ -123,6 +123,8 @@ void ofApp::keyPressed(int key){
 			// Generate random target position to walk to
 			character.walkTo(ofRandom(0, ofGetWidth()));
 			break;
+		case 'r':
+			character.lookAt(ofVec2f{ ofRandomWidth(), ofRandomHeight() });
 		default:
 			break;
 	}

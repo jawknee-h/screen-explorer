@@ -13,8 +13,8 @@ class Character
 		~Character();
 
 		void updatePhysics(const float& dt);
-		void draw();
-		void draw_animated();
+		void draw(const float& dt);
+		void draw_animated(const float& dt);
 		void draw_static();
 		void switch_draw_mode();
 		enum DrawMode { dm_animated, dm_static };
@@ -37,6 +37,14 @@ class Character
 		int walkToTargetXPos;
 		void jump();
 		void jumpTowards(const ofVec2f& target);
+
+		// eyes
+		void lookAt(const ofVec2f target);
+		ofVec2f look_target;
+		void blink();
+		bool blinking = false;
+		Spring eye_spring_L{ 0, 0.3f, 0.5f, {0, 0} };
+		Spring eye_spring_R{ 0, 0.3f, 0.5f, {0, 0} };
 
 		void ReachTowards(const ofVec2f& target, float reach_strength);
 
@@ -143,7 +151,7 @@ class Character
 		void draw_antenna(Spring& ant_spr, ofColor col);
 
 		// eyes
-		void update_eyes();
+		void update_eyes(const float& dt);
 
 		// arms
 		const float ARM_SPRING_CONST = 0.13f;

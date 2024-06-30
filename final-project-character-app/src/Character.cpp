@@ -130,12 +130,12 @@ void Character::updatePhysics(const float& dt)
 	antenna_spring2.setAnchorPos({ sprite.getPosition().x + 15, sprite.getPosition().y - (sprite.getHeight() * 0.67f)});
 }
 
-void Character::draw()
+void Character::draw(const float& dt)
 {
 	switch (drawMode)
 	{
 		case dm_animated:
-			draw_animated();
+			draw_animated(dt);
 			break;
 		case dm_static:
 			draw_static();
@@ -149,7 +149,7 @@ void Character::draw_static()
 	standing_sprite.draw();
 }
 
-void Character::draw_animated()
+void Character::draw_animated(const float& dt)
 {
 	auto draw_verts = [](auto& vertarray, ofColor& c) {
 		ofPushStyle();
@@ -200,7 +200,7 @@ void Character::draw_animated()
 	ofPopStyle();
 
 	// eyes
-	update_eyes();
+	update_eyes(dt);
 }
 
 void Character::draw_antenna(Spring& ant_spr, ofColor col)
@@ -232,19 +232,25 @@ void Character::draw_antenna(Spring& ant_spr, ofColor col)
 	ofPopStyle();
 }
 
-void Character::update_eyes()
+void Character::update_eyes(const float& dt)
 {
 	ofPushStyle();
 	ofSetColor(34, 32, 52);
 
 	// left eye
 	ofVec2f rest_pos(sprite.getPosition().x - 20, sprite.getPosition().y - 100);
-	ofVec2f look_offset = set_length(of_get_mouse_pos() - rest_pos, 5);
-	ofDrawCircle(rest_pos + look_offset, 10);
+	ofVec2f look_offset = set_length(look_target - rest_pos, 5);
+	
+	eye_spring_L.setAnchorPos(rest_pos + look_offset);
+	eye_spring_L.update(dt);
+	ofDrawCircle(eye_spring_L.getEndPos() , 10);
 
 	// right eye
 	rest_pos = { sprite.getPosition().x + 33, sprite.getPosition().y - 91 };
-	ofDrawCircle(rest_pos + look_offset, 10);
+
+	eye_spring_R.setAnchorPos(rest_pos + look_offset);
+	eye_spring_R.update(dt);
+	ofDrawCircle(eye_spring_R.getEndPos(), 10);
 
 	ofPopStyle();
 }
@@ -333,6 +339,34 @@ void Character::jumpTowards(const ofVec2f& target)
 	velocity = trajectory;
 
 	onGround = false;
+}
+
+void Character::lookAt(const ofVec2f target)
+{
+	auto distance_to_new_target = ofVec2f(target - look_target).length();
+
+	// chance to blink if the new target is far away from the previous target
+	if (distance_to_new_target > 40)
+	{
+		// blinking some of the time
+		if (rand() % 10 > 7)
+		{
+			blink();
+		}
+	}
+	look_target = target;
+}
+
+void Character::blink()
+{
+	blinking = true;
+
+	// occasionally twitch antennas when blinking.
+	if (rand() % 10 > 7)
+	{
+		antenna_spring1.addImpulse({ -0.4f, 0.4f });
+		antenna_spring2.addImpulse({ 0.4f, 0.4f });
+	}
 }
 
 void Character::update_arms(const float& dt) // hange to update wings****
