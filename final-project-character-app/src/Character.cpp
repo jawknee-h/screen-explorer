@@ -201,6 +201,22 @@ void Character::draw_animated(const float& dt)
 
 	// eyes
 	update_eyes(dt);
+
+	// updating and drawing the eyelid sprite
+	if (blinking)
+	{
+		if (eyelid_alpha < 255) eyelid_alpha = 255;
+		else blinking = false;
+	}
+	else
+	{
+		if (eyelid_alpha > 0) eyelid_alpha -= 15; // **dt
+		eyelid_alpha = max(eyelid_alpha, 0);
+	}
+
+	eyelidsprite.setPosition(sprite.getPosition());
+	eyelidsprite.setAlpha(eyelid_alpha);
+	eyelidsprite.draw();
 }
 
 void Character::draw_antenna(Spring& ant_spr, ofColor col)

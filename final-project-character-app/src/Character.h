@@ -45,6 +45,8 @@ class Character
 		bool blinking = false;
 		Spring eye_spring_L{ 0, 0.3f, 0.5f, {0, 0} };
 		Spring eye_spring_R{ 0, 0.3f, 0.5f, {0, 0} };
+		int eyelid_alpha = 0;
+		Sprite eyelidsprite{ "eyelids.png" };
 
 		void ReachTowards(const ofVec2f& target, float reach_strength);
 

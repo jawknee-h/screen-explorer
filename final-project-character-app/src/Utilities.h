@@ -34,9 +34,16 @@ struct Sprite
 	{
 		return pos;
 	}
+	void setAlpha(const int new_alpha)
+	{
+		alpha = new_alpha;
+	}
 	void draw()
 	{
+		ofPushStyle();
+		ofSetColor(255, 255, 255, alpha);
 		img.draw({pos.x - getWidth()/2, pos.y - getHeight()}); // drawing centered
+		ofPopStyle();
 	}
 	const float& getWidth()
 	{
@@ -48,6 +55,7 @@ struct Sprite
 	}
 	ofVec2f pos;
 	ofImage img;
+	int alpha = 255;
 };
 
 inline auto normalize_vec(const ofVec2f& v)
