@@ -20,7 +20,7 @@ void ofApp::update(){
 	{
 		POINT point;
 		if (GetCursorPos(&point)) {
-			cout << point.x << "," << point.y << "\n";
+			//cout << point.x << "," << point.y << "\n";
 			// If cursor is out of desired bounds
 			if (point.x > 1226 || point.y < 66 || point.y > 990)
 			{

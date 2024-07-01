@@ -86,7 +86,7 @@ namespace matrix
 
   int checkbounds()
   {
-    if (xpos < 0)
+    if (xpos < 1)
     {
       return -1;
     }
